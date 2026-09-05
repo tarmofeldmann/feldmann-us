@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tarmo.feldmann.us — Foto</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--fg:#111;--muted:#6b6b6b;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:Inter,sans-serif;line-height:1.6}
+h1,h2{font-family:Fraunces,serif;font-weight:300;letter-spacing:-.02em}
+header{padding:72px 24px 32px;max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:16px}
+header h1{font-size:56px;line-height:.9}
+header p{color:var(--muted);max-width:320px;font-size:14px}
+.grid{max-width:1400px;margin:0 auto;padding:24px;display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{position:relative;overflow:hidden;background:#fff;border-radius:18px;grid-column:span 4;aspect-ratio:4/3;cursor:pointer;transition:transform .4s}
+.card:hover{transform:translateY(-4px)}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card .meta{position:absolute;inset:auto 0 0 0;padding:16px;background:linear-gradient(transparent,rgba(0,0,0,.6));color:#fff;display:flex;justify-content:space-between;align-items:end}
+.card .meta span{font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.card .meta h2{font-size:22px;line-height:1.1}
+.card.wide{grid-column:span 8;aspect-ratio:16/10}
+.card.tall{grid-column:span 4;aspect-ratio:3/4}
+@media(max-width:900px){.card,.card.wide,.card.tall{grid-column:span 12} header h1{font-size:42px}}
+.lightbox{position:fixed;inset:0;background:rgba(10,10,10,.9);display:none;place-items:center;padding:24px;z-index:50}
+.lightbox.open{display:grid}
+.lightbox img{max-width:92vw;max-height:86vh;border-radius:12px}
+.lightbox button{position:absolute;top:20px;right:20px;background:#fff;border:0;border-radius:999px;width:40px;height:40px;font-size:20px;cursor:pointer}
+footer{max-width:1400px;margin:0 auto;padding:80px 24px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<header>
+<div>
+<h1>tarmo.feldmann.us</h1>
+<div style="margin-top:8px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)">Pärnu · foto päevik</div>
+</div>
+<p>Kolm pilti 2021 Blogger arhiivist — nüüd uues ruudustikus. Klõpsa pildil, et näha suurelt. Edasi saad lisada uusi faile otse GitHubi.</p>
+</header>
+<div class="grid">
+
+  <article class="card wide" data-img="https://blogger.googleusercontent.com/img/a/AVvXsEiJqTF-306zfZ_NfOvnK1s6wQU2AQIzarGiOHlJ9ZpaRLthW_E11HkeJwK3ZeawLc75uKgc3VVPMNZ0kGTnjiZ025-jeJBSmxQTTjTyUwlULPRsfm1vW5rwyFK6NGj_ll8OdanVrG2OK9bTAZGny3m02z8kK6rYTyVHkMk27S2PnDn6GZ6I4tGDUSEL-g">
+    <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiJqTF-306zfZ_NfOvnK1s6wQU2AQIzarGiOHlJ9ZpaRLthW_E11HkeJwK3ZeawLc75uKgc3VVPMNZ0kGTnjiZ025-jeJBSmxQTTjTyUwlULPRsfm1vW5rwyFK6NGj_ll8OdanVrG2OK9bTAZGny3m02z8kK6rYTyVHkMk27S2PnDn6GZ6I4tGDUSEL-g" alt="Ausõna" loading="lazy">
+    <div class="meta"><span>ausõna · 2021-11-04</span><h2>Ausõna</h2></div>
+  </article>
+
+  <article class="card tall" data-img="https://blogger.googleusercontent.com/img/a/AVvXsEjFo1DLJtIb5Ua-aPmalcTu78zWxu78VndCZFzeiHkP61QzAnQoG9wrgsbLnVCgRckDNJTbNixDO8PjRWiUJoHowLibmB-EJrxqBzYpio1fChT68YMFb2H2ZWf7Ggjzu37VXtJ8BJpamL4ADZMTAN7k6ZwLrTYllpgzt_jBXpv84HfemCJUfZNloe0y7Q">
+    <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjFo1DLJtIb5Ua-aPmalcTu78zWxu78VndCZFzeiHkP61QzAnQoG9wrgsbLnVCgRckDNJTbNixDO8PjRWiUJoHowLibmB-EJrxqBzYpio1fChT68YMFb2H2ZWf7Ggjzu37VXtJ8BJpamL4ADZMTAN7k6ZwLrTYllpgzt_jBXpv84HfemCJUfZNloe0y7Q" alt="Raha" loading="lazy">
+    <div class="meta"><span>raha · 2021-11-05</span><h2>Raha</h2></div>
+  </article>
+
+  <article class="card" data-img="https://blogger.googleusercontent.com/img/a/AVvXsEjzD1by8PoWKIJKHw9DjeBhMXK9wdexmGfdcGOs3t1vV6Hu6ju0D0BQMu813TxkPM9OOIDGwv5_MCCywxc_fjKOtrSY5RR7pyLZ4Y1-7KuTt8oU1A5zJrXuOogBZPtHVHzhgBrym-d_x2emltZXv65GZFACTgLgY18n756iA1PV0MJTHOmk5TidcR-HSQ">
+    <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjzD1by8PoWKIJKHw9DjeBhMXK9wdexmGfdcGOs3t1vV6Hu6ju0D0BQMu813TxkPM9OOIDGwv5_MCCywxc_fjKOtrSY5RR7pyLZ4Y1-7KuTt8oU1A5zJrXuOogBZPtHVHzhgBrym-d_x2emltZXv65GZFACTgLgY18n756iA1PV0MJTHOmk5TidcR-HSQ" alt="West Ham" loading="lazy">
+    <div class="meta"><span>west ham · 2021-11-05</span><h2>West Ham</h2></div>
+  </article>
+
+</div>
+<div class="lightbox" id="lightbox"><button id="close">×</button><img id="lbimg" src=""></div>
+<footer><span>© Tarmo Feldmann — feldmann.us → tarmo.feldmann.us</span><span>GitHub Pages + Cloudflare</span></footer>
+<script>
+const lb=document.getElementById('lightbox'), lbimg=document.getElementById('lbimg');
+document.querySelectorAll('.card').forEach(c=>c.addEventListener('click',()=>{lbimg.src=c.dataset.img;lb.classList.add('open')}))
+document.getElementById('close').onclick=()=>lb.classList.remove('open');
+lb.onclick=(e)=>{if(e.target===lb) lb.classList.remove('open')}
+</script>
+</body>
+</html>
