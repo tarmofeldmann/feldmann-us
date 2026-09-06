@@ -1,98 +1,113 @@
 <!DOCTYPE html>
 <html lang="et">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Tarmo Feldmann foto — automaatne</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tarmo Feldmann foto — random</title>
 <style>
-body{margin:0;font-family:Inter,system-ui;background:#fefefe;color:#111;transition:background 1s ease}
-header{padding:32px;border-bottom:1px solid #eee}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding:16px}
-.card{border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);cursor:pointer;transform-origin:center}
-.card img{width:100%;height:240px;object-fit:cover;display:block}
-.card .cap{padding:12px;font-weight:600}
-.big{grid-column:span 2;grid-row:span 2}
-.wide{grid-column:span 2}
-#status{padding:12px 32px;color:#888;font-size:14px}
+html,body{margin:0;min-height:100vh}
+body{font-family:Instrument Serif, Georgia, serif;background:#ff006e;color:#fff;transition:background .8s ease;padding:0}
+header{padding:32px 32px 12px}
+h1{margin:0;font-size:42px;line-height:0.9}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;padding:24px}
+.card{background:#fff;color:#111;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.2);transform:rotate(-1deg)}
+.card:nth-child(even){transform:rotate(1.2deg)}
+.card img{width:100%;height:220px;object-fit:cover}
+.card .cap{padding:14px 16px;font-size:18px;font-weight:700;line-height:1.3}
+#status{padding:0 32px 8px;opacity:.8;font-family:monospace;font-size:13px}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;background:#000;color:#fff;font-size:12px;margin-right:6px}
 </style>
 </head>
 <body>
 <header>
 <h1 id="mainTitle">Tarmo Feldmann foto</h1>
-<div style="opacity:.6">PÄRNU FOTO PÄEVIK 2009 — 2026 · automaatne random · iga 6h uus</div>
+<div style="opacity:.8;margin-top:6px">PÄRNU FOTO PÄEVIK 2009 — 2026 · seosetu random · iga 6h uus</div>
 </header>
 <div id="status">Laen...</div>
 <div id="grid" class="grid"></div>
 
 <script>
-const FEED = 'https://tarmo.feldmann.us/feeds/posts/default?alt=json&max-results=50';
+const FEED_URL = 'https://tarmo.feldmann.us/feeds/posts/default?alt=json&max-results=50';
 const PROXIES = [
   u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
-  u => 'https://corsproxy.io/?' + encodeURIComponent(u)
+  u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+  u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)
 ];
-const COLORS = ["#ff006e","#ffbe0b","#fb5607","#8338ec","#3a86ff","#06ffa5","#ff00ff","#00ffff","#ffff00","#111","#ff0000","#00ff00"];
-const FALLBACK = [
-  {title:"Külmkapp unustas Pärnus", img:"https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=800"},
-  {title:"DNS ja takso tantsisid aidas", img:"https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=800"},
-  {title:"Raeküla jaam 04:12", img:"https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=800"}
+const COLORS = ["#ff006e","#ffbe0b","#fb5607","#8338ec","#3a86ff","#06ffa5","#ff00ff","#00ffff","#ffff00","#111","#ff3b30","#34c759","#af52de"];
+const SURREAL = [
+  ["Külmkapp unustas","Pärnus","ja keegi ei saanud aru."],
+  ["DNS tantsis","aidas","ja luup näitas x3.2 et sein on supp."],
+  ["Kitsarööpmeline sõi","Bloggeris","ja Väino ütles et seda pole olemas."],
+  ["Viispluss takso","läks katki","Raeküla jaama varjus kell 03:07."],
+  ["Konduktor müüs pileti","tomatil","ja kass kiitis heaks."],
+  ["GitHub ütles","CPanelis","et Index.html on suure tähega ja teine väiksega."],
+  ["Proxy 1","proovis uuesti","ja siis tuli roheline lukk."],
+  ["Ahjukartul","vaatas","Pärnu vanu fotosid ja naeris."],
+  ["Traktor","magas","kollases kastis ja ärkas hallis pilves."]
 ];
-
+const IMGS = [
+  "https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=800",
+  "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=800",
+  "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=800",
+  "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?q=80&w=800",
+  "https://blogger.googleusercontent.com/img/a/AVvXsEiJqTF-306zfZ_NfOvnK1s6wQU2AQIzarGiOHlJ9ZpaRLthW_E11HkeJwK3ZeawLc75uKgc3VVPMNZ0kGTnjiZ025-jeJBSmxQTTjTyUwlULPRsfm1vW5rwyFK6NGj_ll8OdanVrG2OK9bTAZGny3m02z8kK6rYTyVHkMk27S2PnDn6GZ6I4tGDUSEL-g"
+];
+const $ = s => document.querySelector(s);
 function juhu(a){return a[Math.floor(Math.random()*a.length)]}
-function randomDesign(){
-  const c=juhu(COLORS);
-  document.body.style.background=c;
-  document.body.style.color=(c=="#ffff00"||c=="#00ffff"||c=="#06ffa5"||c=="#ffbe0b")?"#000":"#fff";
-}
+function randomBg(){ const c=juhu(COLORS); document.body.style.background=c; document.body.style.color=(c=="#ffff00"||c=="#00ffff"||c=="#06ffa5"||c=="#ffbe0b")?"#000":"#fff"; }
+function genTitle(){ const [a,b,c]=juhu(SURREAL); return `${a} ${b} ${c}`; }
 
-async function tryFetch(url){
-  const r=await fetch(url,{cache:'no-store'});
-  if(!r.ok) throw new Error('HTTP '+r.status);
-  return r.json();
+async function fetchWithTimeout(url, ms=3000){
+  const ctrl=new AbortController();
+  const t=setTimeout(()=>ctrl.abort(), ms);
+  try{
+    const r=await fetch(url,{signal:ctrl.signal,cache:'no-store'});
+    clearTimeout(t);
+    if(!r.ok) throw new Error('http '+r.status);
+    return await r.json();
+  }finally{ clearTimeout(t); }
 }
 
 async function load(){
-  document.getElementById('status').textContent='Laen tarmo.feldmann.us/feeds...';
-  let data=null;
-  for(const p of PROXIES){
-    try{ data=await tryFetch(p(FEED)); break; }catch(e){ console.log('proxy fail',e); }
+  $("#status").textContent="Proovin feedi...";
+  randomBg();
+  let posts=null;
+  // 1. otse
+  try{ posts=await fetchWithTimeout(FEED_URL,2500); }catch(e){}
+  // 2. proxide kaudu
+  if(!posts){
+    for(const p of PROXIES){
+      try{ posts=await fetchWithTimeout(p(FEED_URL),3000); if(posts) break; }catch(e){}
+    }
   }
-  // direct try as last
-  if(!data){ try{ data=await tryFetch(FEED); }catch(e){} }
 
-  let posts=[];
-  if(data && data.feed && data.feed.entry){
-    posts=data.feed.entry.map(e=>{
-      const title=e.title.$t;
-      const content=e.content?e.content.$t:'';
-      const m=content.match(/<img[^>]+src="([^">]+)"/);
-      const img=m?m[1]:juhu(FALLBACK).img;
-      return {title, img};
+  let list=[];
+  if(posts && posts.feed && posts.feed.entry){
+    list=posts.feed.entry.map(ent=>{
+      const t=ent.title.$t;
+      const html=ent.content?ent.content.$t:'';
+      const m=html.match(/<img[^>]+src="([^">]+)"/);
+      return {title:t, img:m?m[1]:juhu(IMGS)};
     });
-    document.getElementById('status').textContent=`Feed OK — ${posts.length} postitust`;
+    $("#status").innerHTML=`<span class="badge">Feed OK</span> ${list.length} postitust · värv ${document.body.style.background}`;
   }else{
-    posts=FALLBACK;
-    document.getElementById('status').textContent='Feed ei vastanud — näitan arhiivi (seosetu random)';
+    // FALLBACK - kohe näitab midagi, ei jää laadima
+    list=Array.from({length:12},()=>({title:genTitle(), img:juhu(IMGS)}));
+    $("#status").innerHTML=`<span class="badge">OFFLINE RANDOM</span> Feed ei vasta — näitan seosetut arhiivi · värv ${document.body.style.background} · refresh proovib uuesti`;
   }
 
-  const grid=document.getElementById('grid');
-  grid.innerHTML='';
-  posts.forEach((p,i)=>{
-    const art=document.createElement('article');
-    art.className='card'+(i==0?' big':i==1?' wide':'');
-    art.style.animationDelay=(i*40)+'ms';
-    art.innerHTML=`<img src="${p.img}" loading="lazy" onerror="this.src='${FALLBACK[0].img}'"><div class="cap">${p.title}</div>`;
-    // random rotate nagu seosetu jutt
-    art.style.transform=`rotate(${(Math.random()-0.5)*4}deg)`;
-    grid.appendChild(art);
+  const grid=$("#grid"); grid.innerHTML='';
+  list.forEach((p,i)=>{
+    const el=document.createElement('article');
+    el.className='card';
+    el.innerHTML=`<img src="${p.img}" loading="lazy"><div class="cap">${p.title}</div>`;
+    el.style.transform=`rotate(${(Math.random()-0.5)*6}deg)`;
+    grid.appendChild(el);
   });
-  // main title = viimane post
-  if(posts[0]) document.getElementById('mainTitle').textContent=posts[0].title;
-  randomDesign();
+  if(list[0]) $("#mainTitle").textContent=list[0].title;
 }
 
 load();
-setInterval(randomDesign, 8000);
-setInterval(load, 1000*60*15); // iga 15min proovib uut feedi
+setInterval(()=>{ randomBg(); load(); }, 8000); // iga 8 sek uus värv + uus seosetu pealkiri kui offline
 </script>
 </body>
 </html>
